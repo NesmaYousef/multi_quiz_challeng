@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
       Level(
           function: () {},
           levelName: "level1",
-          levelDesc: "true or false",
+          levelDesc: "True or False",
           image_path: "assets/images/bags.png",
           colors: [kL1, kL12],
           myOutlineBtn: MYOutlineBtn(
@@ -31,9 +31,9 @@ class _HomePageState extends State<HomePage> {
             bColor: Colors.white,
             function: () {},
             iconColor: Colors.white,
-            shapeBorder:RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),)
-                ,
+            shapeBorder: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
           )),
       Level(
           function: () {},
@@ -113,7 +113,9 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => LevelDescription()));
+                                  builder: (context) => LevelDescription(
+                                        levels[index],
+                                      )));
                         });
                   }),
             )
@@ -123,21 +125,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-//MyLevelWidget(
-//                       function: () {
-//                         Navigator.push(
-//                           context,
-//                           MaterialPageRoute(
-//                             builder: (context) {
-//                               return LevelDescription();
-//                             },
-//                           ),
-//                         );
-//                       },
-//                       icon: Icons.check,
-//                       title: 'True or False',
-//                       subtitle: 'Level 1',
-//                       image: 'assets/images/bags.png',
-//                       colors: [kL1, kL12],
-//                     );
