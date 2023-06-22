@@ -20,6 +20,9 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
   int? _choice;
 
   int counter = 10;
+  late Timer timer1;
+  Duration duration=Duration(seconds:1);
+
 
   void checkAnswer(bool userChoice) {
     bool correctAnswer = quizBrain.getQuestionAnswer();
@@ -44,7 +47,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
     if (quizBrain.isFinished()) {
       print('finished');
 
-      Timer(Duration(seconds: 1), () {
+      timer1=Timer(duration, () {
         // Alert(context: context, title: "Finished", desc: "you are done").show();
         setState(() {
           quizBrain.reset();
@@ -58,14 +61,14 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
 
   @override
   void initState() {
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    timer1=Timer.periodic(duration, (timer) {
       setState(() {
         counter--;
       });
       if (counter == 0) {
-        // timer.cancel();
+        timer.cancel();
         counter = 10;
-        quizBrain.nextQuestion();
+        // quizBrain.nextQuestion();
       }
       ;
     });
@@ -191,6 +194,9 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                     onPressed: () {
                       //The user picked true.
                       checkAnswer(true);
+                      counter=0;
+                      timer1.cancel();
+
                     },
                   ),
                 ),
@@ -212,6 +218,8 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                     onPressed: () {
                       //The user picked false.
                       checkAnswer(false);
+                      counter=0;
+                      timer1.cancel();
                     },
                   ),
                 ),
