@@ -11,5 +11,5 @@ const kL3 = Color(0xffa28dd0);
 const kL32 = Color(0xfff4bee7);
 const kBlueBg = Color(0xff3293f4);
 const kG1 = Color(0xffb5bd05);
-
+const bColor=Color(0xfff3dcdc);
 const kFontFamily = 'Sf-Pro-Text';
