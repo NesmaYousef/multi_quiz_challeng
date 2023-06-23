@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_quiz_s_t_tt9/modules/multipe_choice/quizBrainMultiple.dart';
 import 'package:multi_quiz_s_t_tt9/pages/home.dart';
@@ -17,7 +18,7 @@ class MultiQScreen extends StatefulWidget {
 class _MultiQScreenState extends State<MultiQScreen> {
   int counter = 10;
   late Timer timer1;
-  Duration duration = Duration(seconds: 1);
+  Duration duration = const Duration(seconds: 1);
 
   int? userChoice;
   bool? isCorrect;
@@ -33,7 +34,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
       if (correctAnswer == userChoice) {
         isCorrect = true;
         scoreKeeper.add(
-          Icon(
+          const Icon(
             Icons.check,
             color: Colors.green,
           ),
@@ -41,7 +42,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
       } else {
         isCorrect = false;
         scoreKeeper.add(
-          Icon(
+          const Icon(
             Icons.close,
             color: Colors.red,
           ),
@@ -53,7 +54,8 @@ class _MultiQScreenState extends State<MultiQScreen> {
       print('finished');
       cancelTimer();
 
-      Timer(duration, () {
+      Timer(const Duration(seconds: 1), () {
+        alert();
         setState(() {
           quizBrain.reset();
           scoreKeeper.clear();
@@ -69,6 +71,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
     if (quizBrain.isFinished()) {
       print('finished');
       cancelTimer();
+      alert();
     } else {
       counter = 10;
       startTimer();
@@ -95,9 +98,23 @@ class _MultiQScreenState extends State<MultiQScreen> {
     timer1.cancel();
   }
 
+  void alert() {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.info,
+      animType: AnimType.rightSlide,
+      title: 'Finished',
+      desc: 'You are done ',
+      btnOkOnPress: () {
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
+    ).show();
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
     startTimer();
     super.initState();
   }
@@ -114,7 +131,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
     // var questionsCount = 10;
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
               kBlueBg,
@@ -143,7 +160,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HomePage(),
+                            builder: (context) => const HomePage(),
                           ),
                           (route) => false,
                         );
@@ -164,7 +181,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
                       ),
                       Text(
                         counter.toString(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Sf-Pro-Text',
                           fontSize: 24,
                           color: Colors.white,
@@ -175,15 +192,15 @@ class _MultiQScreenState extends State<MultiQScreen> {
                   ),
                   OutlinedButton(
                     onPressed: () {},
-                    child: Icon(
-                      Icons.favorite,
-                      color: Colors.white,
-                    ),
                     style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
                         ),
-                        side: BorderSide(color: Colors.white)),
+                        side: const BorderSide(color: Colors.white)),
+                    child: const Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                    ),
                   )
                 ],
               ),
@@ -193,8 +210,8 @@ class _MultiQScreenState extends State<MultiQScreen> {
                 ),
               ),
               Text(
-                'question ${quizBrain.questionNumber} of 10',
-                style: TextStyle(
+                'question ${quizBrain.questionNumber} of ${quizBrain.getLength()} ',
+                style: const TextStyle(
                   fontSize: 18,
                   fontFamily: 'Sf-Pro-Text',
                   color: Colors.white60,
@@ -204,7 +221,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
                 child: Text(
                   quizBrain.getQuestionText(),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 32.0,
                     color: Colors.white,
                   ),
@@ -215,7 +232,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
                     itemCount: quizBrain.getOptions().length,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.only(bottom: 12),
                         child: ElevatedButton(
                           onPressed: userChoice == null
                               ? () {
@@ -232,16 +249,16 @@ class _MultiQScreenState extends State<MultiQScreen> {
                                         ? Colors.red
                                         : Colors.white60,
                             backgroundColor: isCorrect == null
-                                ? Colors.white60
+                                ? Colors.white
                                 : isCorrect! && userChoice == index
                                     ? Colors.green
                                     : userChoice == index
                                         ? Colors.red
-                                        : Colors.white60,
+                                        : Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: 12, horizontal: 16),
                           ),
                           child: Row(
@@ -250,37 +267,40 @@ class _MultiQScreenState extends State<MultiQScreen> {
                               Center(
                                 child: Text(
                                   quizBrain.getOptions()[index],
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: kL2,
                                       fontWeight: FontWeight.w500,
                                       fontSize: 18),
                                 ),
                               ),
                               isCorrect == null
-                                  ? SizedBox()
+                                  ? const SizedBox()
                                   : isCorrect! && userChoice == index
-                                      ? Icon(Icons.check_rounded)
+                                      ? const Icon(Icons.check_rounded)
                                       : userChoice == index
-                                          ? Icon(Icons.close)
-                                          : SizedBox(),
+                                          ? const Icon(Icons.close)
+                                          : const SizedBox(),
                             ],
                           ),
                         ),
                       );
                     }),
               ),
+              Row(
+                children: scoreKeeper,
+              ),
               Opacity(
                 opacity: userChoice != null ? 1.0 : 0.0,
                 child: GestureDetector(
                     onTap: next,
-                    child: Text(
+                    child: const Text(
                       "Next",
                       style: TextStyle(
                         color: Colors.white,
                       ),
                     )),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 24,
               )
             ],

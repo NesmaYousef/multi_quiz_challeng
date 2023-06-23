@@ -34,7 +34,8 @@ class _HomePageState extends State<HomePage> {
             shapeBorder: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
-          )),
+          ),
+          routeName: '/TrueFalseQuiz'),
       Level(
           function: () {},
           levelName: "level2",
@@ -42,13 +43,15 @@ class _HomePageState extends State<HomePage> {
           image_path: "assets/images/ballon-s.png",
           colors: [kL2, kL22],
           myOutlineBtn: MYOutlineBtn(
-              icon: Icons.play_arrow,
-              bColor: Colors.white,
-              function: () {},
-              iconColor: Colors.white,
-              shapeBorder: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              )))
+            icon: Icons.play_arrow,
+            bColor: Colors.white,
+            function: () {},
+            iconColor: Colors.white,
+            shapeBorder: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+          routeName: '/MultiQScreen')
     ];
     return Scaffold(
       appBar: AppBar(

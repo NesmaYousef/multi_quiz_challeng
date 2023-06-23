@@ -10,6 +10,9 @@ class QuizBrainMulti {
         0,
         ['agree', 'disagree', 'not sure']),
   ];
+  int getLength() {
+    return _questionBank.length;
+  }
 
   int get questionNumber => _questionNumber + 1;
 

@@ -6,16 +6,16 @@ class Level {
   String levelDesc;
   String image_path;
   MYOutlineBtn myOutlineBtn;
-
+  final String routeName;
   Function() function;
   List<Color> colors;
-  Level(
-      {required this.function,
-      required this.levelName,
-      required this.levelDesc,
-      required this.image_path,
-      required this.colors,
-      required this.myOutlineBtn});
-
-
+  Level({
+    required this.function,
+    required this.levelName,
+    required this.levelDesc,
+    required this.image_path,
+    required this.colors,
+    required this.myOutlineBtn,
+    required this.routeName,
+  });
 }
