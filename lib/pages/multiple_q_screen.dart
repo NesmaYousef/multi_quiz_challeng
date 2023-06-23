@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:multi_quiz_s_t_tt9/modules/multipe_choice/quizBrainMultiple.dart';
 import 'package:multi_quiz_s_t_tt9/pages/home.dart';
 import 'package:multi_quiz_s_t_tt9/widgets/my_outline_btn.dart';
 
@@ -12,10 +15,103 @@ class MultiQScreen extends StatefulWidget {
 }
 
 class _MultiQScreenState extends State<MultiQScreen> {
+  int counter = 10;
+  late Timer timer1;
+  Duration duration = Duration(seconds: 1);
+
+  int? userChoice;
+  bool? isCorrect;
+  bool? isFinal;
+  List<Icon> scoreKeeper = [];
+
+  QuizBrainMulti quizBrain = QuizBrainMulti();
+
+  void checkAnswer() {
+    int correctAnswer = quizBrain.getQuestionAnswer();
+    cancelTimer();
+    setState(() {
+      if (correctAnswer == userChoice) {
+        isCorrect = true;
+        scoreKeeper.add(
+          Icon(
+            Icons.check,
+            color: Colors.green,
+          ),
+        );
+      } else {
+        isCorrect = false;
+        scoreKeeper.add(
+          Icon(
+            Icons.close,
+            color: Colors.red,
+          ),
+        );
+      }
+    });
+
+    if (quizBrain.isFinished()) {
+      print('finished');
+      cancelTimer();
+
+      Timer(duration, () {
+        setState(() {
+          quizBrain.reset();
+          scoreKeeper.clear();
+          isCorrect = null;
+          userChoice = null;
+          counter = 10;
+        });
+      });
+    }
+  }
+
+  void next() {
+    if (quizBrain.isFinished()) {
+      print('finished');
+      cancelTimer();
+    } else {
+      counter = 10;
+      startTimer();
+    }
+    setState(() {
+      isCorrect = null;
+      userChoice = null;
+      quizBrain.nextQuestion();
+    });
+  }
+
+  void startTimer() {
+    timer1 = Timer.periodic(duration, (timer) {
+      setState(() {
+        counter--;
+      });
+      if (counter == 0) {
+        next();
+      }
+    });
+  }
+
+  void cancelTimer() {
+    timer1.cancel();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    startTimer();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    cancelTimer();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var questionNumber = 5;
-    var questionsCount = 10;
+    // var questionNumber = 5;
+    // var questionsCount = 10;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -44,9 +140,6 @@ class _MultiQScreenState extends State<MultiQScreen> {
                       iconColor: Colors.white,
                       bColor: Colors.white,
                       function: () {
-                        // Navigator.pop(context);
-                        // Navigator.pop(context);
-
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
@@ -57,35 +150,6 @@ class _MultiQScreenState extends State<MultiQScreen> {
                       },
                     ),
                   ),
-                  // OutlinedButton(
-                  //   onPressed: () {},
-                  //   style: ButtonStyle().copyWith(
-                  //     shape: MaterialStatePropertyAll(
-                  //       RoundedRectangleBorder(
-                  //         borderRadius: BorderRadius.circular(25),
-                  //       ),
-                  //     ),
-                  //     side: MaterialStatePropertyAll(
-                  //       BorderSide(color: Colors.white),
-                  //     ),
-                  //   ),
-                  //   child: Row(
-                  //     children: [
-                  //       Icon(
-                  //         Icons.favorite,
-                  //         color: Colors.white,
-                  //       ),
-                  //       SizedBox(
-                  //         width: 8,
-                  //       ),
-                  //       const Text(
-                  //         '3',
-                  //         style: TextStyle(color: Colors.white),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-
                   Stack(
                     alignment: Alignment.center,
                     children: [
@@ -93,13 +157,13 @@ class _MultiQScreenState extends State<MultiQScreen> {
                         height: 56,
                         width: 56,
                         child: CircularProgressIndicator(
-                          value: 0.7,
+                          value: counter / 10,
                           color: Colors.white,
                           backgroundColor: Colors.white12,
                         ),
                       ),
                       Text(
-                        '05',
+                        counter.toString(),
                         style: TextStyle(
                           fontFamily: 'Sf-Pro-Text',
                           fontSize: 24,
@@ -109,7 +173,6 @@ class _MultiQScreenState extends State<MultiQScreen> {
                       )
                     ],
                   ),
-
                   OutlinedButton(
                     onPressed: () {},
                     child: Icon(
@@ -130,136 +193,96 @@ class _MultiQScreenState extends State<MultiQScreen> {
                 ),
               ),
               Text(
-                'question $questionNumber of $questionsCount',
+                'question ${quizBrain.questionNumber} of 10',
                 style: TextStyle(
                   fontSize: 18,
                   fontFamily: 'Sf-Pro-Text',
                   color: Colors.white60,
                 ),
               ),
-              SizedBox(
-                height: 8,
-              ),
-              Text(
-                'In Which City of Germany Is the Largest Port?',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontFamily: 'Sf-Pro-Text',
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                height: 48,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 24,
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            'Bremen',
-                            style: TextStyle(
-                                color: kL2,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18),
-                          ),
-                        ),
-                      ),
-                      Icon(
-                        Icons.check_rounded,
-                        color: kL2,
-                      ),
-                    ],
+              Center(
+                child: Text(
+                  quizBrain.getQuestionText(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    color: Colors.white,
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 24,
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            'Bremen',
-                            style: TextStyle(
-                                color: kL2,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: quizBrain.getOptions().length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 12),
+                        child: ElevatedButton(
+                          onPressed: userChoice == null
+                              ? () {
+                                  userChoice = index;
+                                  checkAnswer();
+                                }
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                            disabledBackgroundColor: isCorrect == null
+                                ? Colors.white60
+                                : isCorrect! && userChoice == index
+                                    ? Colors.green
+                                    : userChoice == index
+                                        ? Colors.red
+                                        : Colors.white60,
+                            backgroundColor: isCorrect == null
+                                ? Colors.white60
+                                : isCorrect! && userChoice == index
+                                    ? Colors.green
+                                    : userChoice == index
+                                        ? Colors.red
+                                        : Colors.white60,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 16),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Text(
+                                  quizBrain.getOptions()[index],
+                                  style: TextStyle(
+                                      color: kL2,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 18),
+                                ),
+                              ),
+                              isCorrect == null
+                                  ? SizedBox()
+                                  : isCorrect! && userChoice == index
+                                      ? Icon(Icons.check_rounded)
+                                      : userChoice == index
+                                          ? Icon(Icons.close)
+                                          : SizedBox(),
+                            ],
                           ),
                         ),
-                      ),
-                      Icon(
-                        Icons.check_rounded,
-                        color: kL2,
-                      ),
-                    ],
-                  ),
-                ),
+                      );
+                    }),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: kG1,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 24,
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            'Gaza',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18),
-                          ),
-                        ),
-                      ),
-                      Icon(
-                        Icons.check_rounded,
+              Opacity(
+                opacity: userChoice != null ? 1.0 : 0.0,
+                child: GestureDetector(
+                    onTap: next,
+                    child: Text(
+                      "Next",
+                      style: TextStyle(
                         color: Colors.white,
                       ),
-                    ],
-                  ),
-                ),
+                    )),
               ),
               SizedBox(
-                height: 48,
-              ),
+                height: 24,
+              )
             ],
           ),
         ),

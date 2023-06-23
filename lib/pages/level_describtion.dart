@@ -89,7 +89,7 @@ class LevelDescription extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => TrueFalseQuiz(),
+                        builder: (context) => MultiQScreen(),
                       ),
                     );
                   },
