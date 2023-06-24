@@ -20,11 +20,9 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
 
   List<Icon> scoreKeeper = [];
 
-  int? _choice;
   int? userChoice;
   bool? isCorrect;
   int score = 0;
-
   int counter = 10;
   late Timer timer1;
   Duration duration = const Duration(seconds: 1);
