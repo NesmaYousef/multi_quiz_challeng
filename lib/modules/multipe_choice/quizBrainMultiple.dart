@@ -14,7 +14,9 @@ class QuizBrainMulti {
     return _questionBank.length;
   }
 
-  int get questionNumber => _questionNumber + 1;
+  int getQuestionNumber() {
+    return _questionNumber + 1;
+  }
 
   String getQuestionText() {
     return _questionBank[_questionNumber].questionText;

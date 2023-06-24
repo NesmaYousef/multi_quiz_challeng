@@ -24,6 +24,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
   bool? isCorrect;
   bool? isFinal;
   List<Icon> scoreKeeper = [];
+  int score = 0;
 
   QuizBrainMulti quizBrain = QuizBrainMulti();
 
@@ -33,6 +34,8 @@ class _MultiQScreenState extends State<MultiQScreen> {
     setState(() {
       if (correctAnswer == userChoice) {
         isCorrect = true;
+        score++;
+
         scoreKeeper.add(
           const Icon(
             Icons.check,
@@ -69,7 +72,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
 
   void next() {
     if (quizBrain.isFinished()) {
-      print('finished');
+      print('finished, score is $score');
       cancelTimer();
       alert();
     } else {
@@ -104,7 +107,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
       dialogType: DialogType.info,
       animType: AnimType.rightSlide,
       title: 'Finished',
-      desc: 'You are done ',
+      desc: 'Score : $score / ${quizBrain.getLength()} ',
       btnOkOnPress: () {
         Navigator.pop(context);
         Navigator.pop(context);
@@ -210,7 +213,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
                 ),
               ),
               Text(
-                'question ${quizBrain.questionNumber} of ${quizBrain.getLength()} ',
+                'question ${quizBrain.getQuestionNumber()} of ${quizBrain.getLength()} ',
                 style: const TextStyle(
                   fontSize: 18,
                   fontFamily: 'Sf-Pro-Text',
@@ -288,6 +291,9 @@ class _MultiQScreenState extends State<MultiQScreen> {
               ),
               Row(
                 children: scoreKeeper,
+              ),
+              const SizedBox(
+                height: 24,
               ),
               Opacity(
                 opacity: userChoice != null ? 1.0 : 0.0,
