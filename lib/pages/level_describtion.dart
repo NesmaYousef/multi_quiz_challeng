@@ -14,8 +14,6 @@ class LevelDescription extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var questionNumber = 5;
-    var questionsCount = 10;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -86,11 +84,9 @@ class LevelDescription extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 12),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushNamed(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => MultiQScreen(),
-                      ),
+                      info.routeName,
                     );
                   },
                   style: ElevatedButton.styleFrom(
