@@ -29,19 +29,23 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
   late Timer timer1;
   Duration duration = const Duration(seconds: 1);
 
-  void checkAnswer(bool userChoice) {
-    bool correctAnswer = quizBrain.getQuestionAnswer();
+  void checkAnswer(int userChoice) {
+    int correctAnswer = quizBrain.getQuestionAnswer();
+    cancelTimer();
     setState(() {
       if (correctAnswer == userChoice) {
+        isCorrect = true;
+        score++;
         scoreKeeper.add(
-          Icon(
+          const Icon(
             Icons.check,
             color: Colors.green,
           ),
         );
       } else {
+        isCorrect = false;
         scoreKeeper.add(
-          Icon(
+          const Icon(
             Icons.close,
             color: Colors.red,
           ),
@@ -51,16 +55,18 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
 
     if (quizBrain.isFinished()) {
       print('finished');
+      cancelTimer();
 
-      timer1 = Timer(duration, () {
-        // Alert(context: context, title: "Finished", desc: "you are done").show();
+      Timer(const Duration(seconds: 1), () {
+        alert();
         setState(() {
           quizBrain.reset();
           scoreKeeper.clear();
+          isCorrect = null;
+          userChoice = 0;
+          counter = 10;
         });
       });
-    } else {
-      quizBrain.nextQuestion();
     }
   }
 
@@ -81,7 +87,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
     }
     setState(() {
       isCorrect = null;
-      userChoice = null;
+      userChoice = 0;
       quizBrain.nextQuestion();
     });
   }
@@ -235,7 +241,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                     ),
                     onPressed: () {
                       //The user picked true.
-                      checkAnswer(true);
+                      checkAnswer(0);
                       // counter = 0;
                       // timer1.cancel();
                     },
@@ -258,7 +264,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                     ),
                     onPressed: () {
                       //The user picked false.
-                      checkAnswer(false);
+                      checkAnswer(1);
                       // counter = 0;
                       // timer1.cancel();
                     },
@@ -269,7 +275,24 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                 children: scoreKeeper,
               ),
               SizedBox(
-                height: 72,
+                height: 20,
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              Opacity(
+                opacity: userChoice != null ? 1.0 : 0.0,
+                child: GestureDetector(
+                    onTap: next,
+                    child: const Text(
+                      "Next",
+                      style: TextStyle(
+                        color: Colors.red,
+                      ),
+                    )),
+              ),
+              const SizedBox(
+                height: 24,
               )
             ],
           ),
@@ -278,4 +301,3 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
     );
   }
 }
-//
