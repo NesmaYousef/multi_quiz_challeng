@@ -40,6 +40,10 @@ class QuizBrain {
     }
   }
 
+  int getLength() {
+    return _questionBank.length;
+  }
+
   void reset() {
     _questionNumber = 0;
   }

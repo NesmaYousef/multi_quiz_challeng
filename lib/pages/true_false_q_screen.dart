@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -8,6 +9,8 @@ import '../widgets/my_outline_btn.dart';
 import 'home.dart';
 
 class TrueFalseQuiz extends StatefulWidget {
+  const TrueFalseQuiz({super.key});
+
   @override
   _TrueFalseQuizState createState() => _TrueFalseQuizState();
 }
@@ -18,11 +21,13 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
   List<Icon> scoreKeeper = [];
 
   int? _choice;
+  int? userChoice;
+  bool? isCorrect;
+  int score = 0;
 
   int counter = 10;
   late Timer timer1;
-  Duration duration=Duration(seconds:1);
-
+  Duration duration = const Duration(seconds: 1);
 
   void checkAnswer(bool userChoice) {
     bool correctAnswer = quizBrain.getQuestionAnswer();
@@ -47,7 +52,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
     if (quizBrain.isFinished()) {
       print('finished');
 
-      timer1=Timer(duration, () {
+      timer1 = Timer(duration, () {
         // Alert(context: context, title: "Finished", desc: "you are done").show();
         setState(() {
           quizBrain.reset();
@@ -61,22 +66,59 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
 
   @override
   void initState() {
-    timer1=Timer.periodic(duration, (timer) {
+    startTimer();
+    super.initState();
+  }
+
+  void next() {
+    if (quizBrain.isFinished()) {
+      print('finished, score is $score');
+      cancelTimer();
+      alert();
+    } else {
+      counter = 10;
+      startTimer();
+    }
+    setState(() {
+      isCorrect = null;
+      userChoice = null;
+      quizBrain.nextQuestion();
+    });
+  }
+
+  void startTimer() {
+    timer1 = Timer.periodic(duration, (timer) {
       setState(() {
         counter--;
       });
       if (counter == 0) {
-        timer.cancel();
-        counter = 10;
-        // quizBrain.nextQuestion();
+        next();
       }
-      ;
     });
-    super.initState();
+  }
+
+  void cancelTimer() {
+    timer1.cancel();
+  }
+
+  void alert() {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.info,
+      animType: AnimType.rightSlide,
+      title: 'Finished',
+      desc: 'Score : $score / ${quizBrain.getLength()} ',
+      btnOkOnPress: () {
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
+    ).show();
   }
 
   @override
   void dispose() {
+    cancelTimer();
     super.dispose();
   }
 
@@ -194,9 +236,8 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                     onPressed: () {
                       //The user picked true.
                       checkAnswer(true);
-                      counter=0;
-                      timer1.cancel();
-
+                      // counter = 0;
+                      // timer1.cancel();
                     },
                   ),
                 ),
@@ -218,8 +259,8 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                     onPressed: () {
                       //The user picked false.
                       checkAnswer(false);
-                      counter=0;
-                      timer1.cancel();
+                      // counter = 0;
+                      // timer1.cancel();
                     },
                   ),
                 ),
