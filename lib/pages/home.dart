@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(15),
             ),
           ),
-          routeName: '/TrueFalseQuiz'),
+          routeName: '/first'),
       Level(
           function: () {},
           levelName: "level2",
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(15),
             ),
           ),
-          routeName: '/MultiQScreen')
+          routeName: '/second')
     ];
     return Scaffold(
       appBar: AppBar(
