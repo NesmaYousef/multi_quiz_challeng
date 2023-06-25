@@ -109,9 +109,13 @@ class _MultiQScreenState extends State<MultiQScreen> {
       title: 'Finished',
       desc: 'Score : $score / ${quizBrain.getLength()} ',
       btnOkOnPress: () {
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomePage(),
+          ),
+          (route) => false,
+        );
       },
     ).show();
   }
