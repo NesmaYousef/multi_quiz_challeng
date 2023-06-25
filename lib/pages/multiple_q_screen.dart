@@ -269,7 +269,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 24,
                               ),
                               Text(

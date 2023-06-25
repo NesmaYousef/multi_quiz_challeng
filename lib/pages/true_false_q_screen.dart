@@ -23,6 +23,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
   int? userChoice;
   bool? isCorrect;
   int score = 0;
+
   int counter = 10;
   late Timer timer1;
   Duration duration = const Duration(seconds: 1);
@@ -113,9 +114,13 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
       title: 'Finished',
       desc: 'Score : $score / ${quizBrain.getLength()} ',
       btnOkOnPress: () {
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomePage(),
+          ),
+          (route) => false,
+        );
       },
     ).show();
   }
@@ -130,7 +135,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
               kBlueBg,
@@ -157,13 +162,10 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                       iconColor: Colors.white,
                       bColor: Colors.white,
                       function: () {
-                        // Navigator.pop(context);
-                        // Navigator.pop(context);
-
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HomePage(),
+                            builder: (context) => const HomePage(),
                           ),
                           (route) => false,
                         );
@@ -184,7 +186,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                       ),
                       Text(
                         counter.toString(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Sf-Pro-Text',
                           fontSize: 24,
                           color: Colors.white,
@@ -195,27 +197,27 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                   ),
                   OutlinedButton(
                     onPressed: () {},
-                    child: Icon(
-                      Icons.favorite,
-                      color: Colors.white,
-                    ),
                     style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
                         ),
-                        side: BorderSide(color: Colors.white)),
+                        side: const BorderSide(color: Colors.white)),
+                    child: const Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                    ),
                   )
                 ],
               ),
               Expanded(
                 flex: 5,
                 child: Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Center(
                     child: Text(
                       quizBrain.getQuestionText(),
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 25.0,
                         color: Colors.white,
                       ),
@@ -225,12 +227,12 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.all(15.0),
                   child: ElevatedButton(
-                    style: ButtonStyle(
+                    style: const ButtonStyle(
                       backgroundColor: MaterialStatePropertyAll(Colors.green),
                     ),
-                    child: Text(
+                    child: const Text(
                       'True',
                       style: TextStyle(
                         color: Colors.white,
@@ -248,12 +250,13 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.all(15.0),
                   child: ElevatedButton(
-                    style: ButtonStyle().copyWith(
-                      backgroundColor: MaterialStatePropertyAll(Colors.red),
+                    style: const ButtonStyle().copyWith(
+                      backgroundColor:
+                          const MaterialStatePropertyAll(Colors.red),
                     ),
-                    child: Text(
+                    child: const Text(
                       'False',
                       style: TextStyle(
                         fontSize: 20.0,
@@ -272,26 +275,23 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
               Wrap(
                 children: scoreKeeper,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               const SizedBox(
                 height: 24,
               ),
               Opacity(
-                opacity: userChoice != null ? 1.0 : 0.0,
+                opacity: userChoice != 0 ? 1.0 : 0.0,
                 child: GestureDetector(
                     onTap: next,
                     child: const Text(
                       "Next",
                       style: TextStyle(
-                        color: Colors.red,
+                        color: Colors.white,
                       ),
                     )),
               ),
-              const SizedBox(
-                height: 24,
-              )
             ],
           ),
         ),
