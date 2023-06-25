@@ -111,7 +111,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
       context: context,
       dialogType: DialogType.success,
       animType: AnimType.rightSlide,
-      title: 'Finished',
+      title: 'Finished ',
       desc: 'Score : $score / ${quizBrain.getLength()} ',
       btnOkOnPress: () {
         Navigator.pushAndRemoveUntil(
