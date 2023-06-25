@@ -109,7 +109,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
   void alert() {
     AwesomeDialog(
       context: context,
-      dialogType: DialogType.info,
+      dialogType: DialogType.success,
       animType: AnimType.rightSlide,
       title: 'Finished',
       desc: 'Score : $score / ${quizBrain.getLength()} ',

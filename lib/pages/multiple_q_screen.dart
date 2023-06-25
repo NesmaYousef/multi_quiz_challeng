@@ -104,7 +104,7 @@ class _MultiQScreenState extends State<MultiQScreen> {
   void alert() {
     AwesomeDialog(
       context: context,
-      dialogType: DialogType.info,
+      dialogType: DialogType.success,
       animType: AnimType.rightSlide,
       title: 'Finished',
       desc: 'Score : $score / ${quizBrain.getLength()} ',
