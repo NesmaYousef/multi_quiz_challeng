@@ -134,8 +134,6 @@ class _MultiQScreenState extends State<MultiQScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // var questionNumber = 5;
-    // var questionsCount = 10;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -269,16 +267,17 @@ class _MultiQScreenState extends State<MultiQScreen> {
                                 vertical: 12, horizontal: 16),
                           ),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Center(
-                                child: Text(
-                                  quizBrain.getOptions()[index],
-                                  style: const TextStyle(
-                                      color: kL2,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 18),
-                                ),
+                              SizedBox(
+                                width: 24,
+                              ),
+                              Text(
+                                quizBrain.getOptions()[index],
+                                style: const TextStyle(
+                                    color: kL2,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18),
                               ),
                               isCorrect == null
                                   ? const SizedBox()
@@ -302,13 +301,14 @@ class _MultiQScreenState extends State<MultiQScreen> {
               Opacity(
                 opacity: userChoice != null ? 1.0 : 0.0,
                 child: GestureDetector(
-                    onTap: next,
-                    child: const Text(
-                      "Next",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    )),
+                  onTap: next,
+                  child: const Text(
+                    "Next",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(
                 height: 24,
