@@ -39,7 +39,6 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
         print('Score $score');
         isCorrect = true;
         setState(() {
-          favColor = Colors.redAccent;
           favScal = 2;
           Timer(Duration(milliseconds: 300), () {
             setState(() {
