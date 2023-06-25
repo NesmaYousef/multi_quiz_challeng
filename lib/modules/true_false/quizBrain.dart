@@ -6,15 +6,15 @@ class QuizBrain {
   final List<Question> _questionBank = [
     Question(
       'You can lead a cow down stairs but not up stairs.',
-      false,
+      0,
     ),
     Question(
       'Approximately one quarter of human bones are in the feet.',
-      true,
+      1,
     ),
     Question(
       'A slug\'s blood is green.',
-      true,
+      1,
     ),
   ];
 
@@ -22,7 +22,7 @@ class QuizBrain {
     return _questionBank[_questionNumber].questionText;
   }
 
-  bool getQuestionAnswer() {
+  int getQuestionAnswer() {
     return _questionBank[_questionNumber].questionAnswer;
   }
 
@@ -48,4 +48,5 @@ class QuizBrain {
     _questionNumber = 0;
   }
 }
+////
 //
