@@ -222,14 +222,11 @@ class _MultiQScreenState extends State<MultiQScreen> {
                   color: Colors.white60,
                 ),
               ),
-              Center(
-                child: Text(
-                  quizBrain.getQuestionText(),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 32.0,
-                    color: Colors.white,
-                  ),
+              Text(
+                quizBrain.getQuestionText(),
+                style: const TextStyle(
+                  fontSize: 32.0,
+                  color: Colors.white,
                 ),
               ),
               Expanded(
