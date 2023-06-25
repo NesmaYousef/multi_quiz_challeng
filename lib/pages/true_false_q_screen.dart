@@ -17,93 +17,117 @@ class TrueFalseQuiz extends StatefulWidget {
 
 class _TrueFalseQuizState extends State<TrueFalseQuiz> {
   QuizBrain quizBrain = QuizBrain();
-
+  // final player = AudioPlayer(); //
   List<Icon> scoreKeeper = [];
-
-  int? userChoice;
-  bool? isCorrect;
   int score = 0;
-
   int counter = 10;
-  late Timer timer1;
-  Duration duration = const Duration(seconds: 1);
+  bool? isCorrect;
+  bool? userChoice;
+  late Timer timer;
+  Color favColor = Colors.white;
+  double favScal = 1;
+  bool counterFinished = false;
 
-  void checkAnswer(int userChoice) {
-    int correctAnswer = quizBrain.getQuestionAnswer();
+  bool showCorrectAnswer = false;
+
+  void checkAnswer() {
+    bool correctAnswer = quizBrain.getQuestionAnswer();
     cancelTimer();
     setState(() {
       if (correctAnswer == userChoice) {
-        isCorrect = true;
         score++;
-        scoreKeeper.add(
-          const Icon(
-            Icons.check,
-            color: Colors.green,
-          ),
-        );
+        print('Score $score');
+        isCorrect = true;
+        setState(() {
+          favScal = 2;
+          Timer(Duration(milliseconds: 300), () {
+            setState(() {
+              favScal = 1;
+            });
+          });
+          Timer(Duration(milliseconds: 1000), () {
+            setState(() {
+              favColor = Colors.white;
+            });
+          });
+
+          scoreKeeper.add(
+            const Icon(
+              Icons.check,
+              color: Colors.lightGreen,
+              size: 24,
+            ),
+          );
+        });
       } else {
         isCorrect = false;
         scoreKeeper.add(
           const Icon(
             Icons.close,
-            color: Colors.red,
+            color: Colors.redAccent,
+            size: 24,
           ),
         );
       }
     });
 
     if (quizBrain.isFinished()) {
-      print('finished');
       cancelTimer();
-
-      Timer(const Duration(seconds: 1), () {
+      Timer(Duration(seconds: 1), () {
         alert();
         setState(() {
           quizBrain.reset();
           scoreKeeper.clear();
           isCorrect = null;
-          userChoice = 0;
+          userChoice = null;
           counter = 10;
         });
       });
     }
   }
 
-  @override
-  void initState() {
-    startTimer();
-    super.initState();
-  }
-
   void next() {
     if (quizBrain.isFinished()) {
-      print('finished, score is $score');
-      cancelTimer();
       alert();
+      setState(() {
+        quizBrain.reset();
+        scoreKeeper.clear();
+        isCorrect = null;
+        userChoice = null;
+        counter = 10;
+      });
     } else {
+      setState(() {
+        counterFinished = false;
+      });
       counter = 10;
       startTimer();
+      setState(() {
+        isCorrect = null;
+        userChoice = null;
+        quizBrain.nextQuestion();
+      });
     }
-    setState(() {
-      isCorrect = null;
-      userChoice = 0;
-      quizBrain.nextQuestion();
-    });
   }
 
   void startTimer() {
-    timer1 = Timer.periodic(duration, (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       setState(() {
         counter--;
       });
-      if (counter == 0) {
-        next();
+
+      if (counter == 0 && userChoice == null) {
+        counterFinished = true;
+
+        timer.cancel();
+
+        // next();
       }
     });
   }
 
   void cancelTimer() {
-    timer1.cancel();
+    timer.cancel();
   }
 
   void alert() {
@@ -111,7 +135,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
       context: context,
       dialogType: DialogType.success,
       animType: AnimType.rightSlide,
-      title: 'Finished ',
+      title: 'Finished',
       desc: 'Score : $score / ${quizBrain.getLength()} ',
       btnOkOnPress: () {
         Navigator.pushAndRemoveUntil(
@@ -126,9 +150,9 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
   }
 
   @override
-  void dispose() {
-    cancelTimer();
-    super.dispose();
+  void initState() {
+    startTimer();
+    super.initState();
   }
 
   @override
@@ -138,7 +162,7 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              kBlueBg,
+              kBlueIcon,
               kL2,
             ],
             begin: Alignment.topCenter,
@@ -146,7 +170,8 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.only(top: 74, left: 24, right: 24),
+          padding:
+              const EdgeInsets.only(top: 56, left: 20, right: 20, bottom: 12),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -186,10 +211,10 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                       ),
                       Text(
                         counter.toString(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'Sf-Pro-Text',
                           fontSize: 24,
-                          color: Colors.white,
+                          color: counter <= 5 ? Colors.redAccent : Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       )
@@ -197,105 +222,237 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
                   ),
                   OutlinedButton(
                     onPressed: () {},
+                    child: Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                    ),
                     style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
                         ),
                         side: const BorderSide(color: Colors.white)),
-                    child: const Icon(
-                      Icons.favorite,
-                      color: Colors.white,
-                    ),
-                  )
+                  ),
                 ],
               ),
-              Expanded(
-                flex: 5,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Center(
-                    child: Text(
-                      quizBrain.getQuestionText(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 25.0,
-                        color: Colors.white,
-                      ),
+              const SizedBox(
+                height: 16,
+              ),
+              Text(
+                'question ${quizBrain.getQuestionNumber()} of ${quizBrain.getLength()} ',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontFamily: 'Sf-Pro-Text',
+                  color: Colors.white60,
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Text(
+                // maxFontSize: 42,
+                quizBrain.getQuestionText(),
+                style: const TextStyle(
+                  fontSize: 30,
+                  fontFamily: 'Sf-Pro-Text',
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: GestureDetector(
+                  onTap: counterFinished
+                      ? null
+                      : userChoice == null
+                          ? () {
+                              // print("Index:$index");
+                              userChoice = true;
+                              checkAnswer();
+                            }
+                          : null,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 2),
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        gradient: LinearGradient(
+                            colors: userChoice != null
+                                ? (isCorrect! && userChoice == true)
+                                    ? [Colors.green, Colors.green]
+                                    : userChoice == true
+                                        ? [Colors.red, Colors.red]
+                                        : [Colors.white54, Colors.white54]
+                                : showCorrectAnswer &&
+                                        quizBrain.getQuestionAnswer()
+                                    ? [kL3, kL32]
+                                    : [Colors.white, Colors.white],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter),
+                        color: Colors.white),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 24,
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              'True',
+                              style: TextStyle(
+                                  color: userChoice != null
+                                      ? userChoice == true
+                                          ? Colors.white
+                                          : kL2
+                                      : kL2,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20),
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          userChoice == null
+                              ? null
+                              : isCorrect! && userChoice == true
+                                  ? Icons.check
+                                  : userChoice == true
+                                      ? Icons.close
+                                      : null,
+                          color: userChoice != null
+                              ? userChoice == true
+                                  ? Colors.white
+                                  : null
+                              : null,
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: ElevatedButton(
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(Colors.green),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: GestureDetector(
+                  // False choice
+                  onTap: counterFinished
+                      ? null
+                      : userChoice == null
+                          ? () {
+                              // print("Index:$index");
+                              userChoice = false;
+                              checkAnswer();
+                            }
+                          : null,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 2),
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        gradient: LinearGradient(
+                            colors: userChoice != null
+                                ? (isCorrect! && userChoice == false)
+                                    ? [Colors.green, Colors.green]
+                                    : userChoice == false
+                                        ? [Colors.red, Colors.red]
+                                        : [Colors.white54, Colors.white54]
+                                : showCorrectAnswer &&
+                                        !quizBrain.getQuestionAnswer()
+                                    ? [Colors.grey, Colors.grey]
+                                    : [Colors.white, Colors.white],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter),
+                        color: Colors.white),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 24,
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              'False',
+                              style: TextStyle(
+                                  color: userChoice != null
+                                      ? userChoice == false
+                                          ? Colors.white
+                                          : kL2
+                                      : kL2,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20),
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          userChoice == null
+                              ? null
+                              : isCorrect! && userChoice == false
+                                  ? Icons.check
+                                  : userChoice == false
+                                      ? Icons.close
+                                      : null,
+                          color: userChoice != null
+                              ? userChoice == false
+                                  ? Colors.white
+                                  : null
+                              : null,
+                        ),
+                      ],
                     ),
-                    child: const Text(
-                      'True',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                      ),
-                    ),
-                    onPressed: () {
-                      //The user picked true.
-                      checkAnswer(0);
-                      // counter = 0;
-                      // timer1.cancel();
-                    },
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: ElevatedButton(
-                    style: const ButtonStyle().copyWith(
-                      backgroundColor:
-                          const MaterialStatePropertyAll(Colors.red),
-                    ),
-                    child: const Text(
-                      'False',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                    onPressed: () {
-                      //The user picked false.
-                      checkAnswer(1);
-                      // counter = 0;
-                      // timer1.cancel();
-                    },
                   ),
                 ),
               ),
               Wrap(
                 children: scoreKeeper,
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              Opacity(
-                opacity: userChoice != 0 ? 1.0 : 0.0,
-                child: GestureDetector(
-                    onTap: next,
-                    child: const Text(
-                      "Next",
+              Row(
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () {
+                      next();
+                    },
+                    child: Text(
+                      (userChoice != null && !quizBrain.isFinished() ||
+                              userChoice == null && counter == 0)
+                          ? userChoice == null &&
+                                  counter == 0 &&
+                                  quizBrain.isFinished()
+                              ? 'Next'
+                              : 'Next'
+                          : '',
                       style: TextStyle(
                         color: Colors.white,
+                        fontSize: 20,
                       ),
-                    )),
+                    ),
+                  ),
+                ],
               ),
+              const SizedBox(
+                height: 12,
+              )
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
