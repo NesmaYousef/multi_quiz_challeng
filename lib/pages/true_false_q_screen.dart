@@ -132,21 +132,24 @@ class _TrueFalseQuizState extends State<TrueFalseQuiz> {
 
   void alert() {
     AwesomeDialog(
-      context: context,
-      dialogType: DialogType.success,
-      animType: AnimType.rightSlide,
-      title: 'Finished',
-      desc: 'Score : $score / ${quizBrain.getLength()} ',
-      btnOkOnPress: () {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomePage(),
-          ),
-          (route) => false,
-        );
-      },
-    ).show();
+        context: context,
+        dismissOnTouchOutside: false,
+        dialogType: DialogType.success,
+        animType: AnimType.rightSlide,
+        title: 'Finished',
+        desc: 'Score : $score / ${quizBrain.getLength()} ',
+        btnOkOnPress: () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomePage(),
+            ),
+            (route) => false,
+          );
+        },
+        btnCancelOnPress: () {
+          startTimer();
+        }).show();
   }
 
   @override

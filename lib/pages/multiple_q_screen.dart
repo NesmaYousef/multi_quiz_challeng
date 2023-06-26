@@ -103,21 +103,24 @@ class _MultiQScreenState extends State<MultiQScreen> {
 
   void alert() {
     AwesomeDialog(
-      context: context,
-      dialogType: DialogType.success,
-      animType: AnimType.rightSlide,
-      title: 'Finished',
-      desc: 'Score : $score / ${quizBrain.getLength()} ',
-      btnOkOnPress: () {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomePage(),
-          ),
-          (route) => false,
-        );
-      },
-    ).show();
+        context: context,
+        dialogType: DialogType.success,
+        dismissOnTouchOutside: false,
+        animType: AnimType.rightSlide,
+        title: 'Finished',
+        desc: 'Score : $score / ${quizBrain.getLength()} ',
+        btnOkOnPress: () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomePage(),
+            ),
+            (route) => false,
+          );
+        },
+        btnCancelOnPress: () {
+          startTimer();
+        }).show();
   }
 
   @override

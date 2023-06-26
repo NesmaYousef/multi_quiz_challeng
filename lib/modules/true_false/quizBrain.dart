@@ -4,11 +4,11 @@ class QuizBrain {
   int _questionNumber = 0;
 
   final List<Question> _questionBank = [
+    Question('You can lead a cow down stairs but not up stairs.', false),
     Question(
-      'You can lead a cow down stairs but not up stairs.',
-      false,
+      'Approximately one quarter of human bones are in the feet.',
+      true,
     ),
-    Question('Approximately one quarter of human bones are in the feet.', true),
     Question('A slug\'s blood is green.', true),
   ];
 
@@ -38,12 +38,13 @@ class QuizBrain {
     return _questionBank.length;
   }
 
-  void reset() {
-    _questionNumber = 0;
-  }
-
-////
   int getQuestionNumber() {
     return _questionNumber + 1;
   }
+
+  void reset() {
+    _questionNumber = 0;
+  }
 }
+////
+//
